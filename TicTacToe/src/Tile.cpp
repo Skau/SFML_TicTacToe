@@ -1,50 +1,50 @@
 #include "Tile.h"
+
 #include <iostream>
-#include <SFML/Graphics.hpp>
 
-Tile::Tile(sf::Vector2f pos) : m_Pos{ pos }, m_State { State::None }
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Texture.hpp>
+
+Tile::Tile(sf::Vector2f pos) : m_Pos{ pos }, m_State{ State::None }
 {
-	m_Tex_None = std::make_unique<sf::Texture>();
-	m_Tex_X = std::make_unique<sf::Texture>();
-	m_Tex_O = std::make_unique<sf::Texture>();
+	m_Textures.emplace_back(std::make_unique<sf::Texture>());
 
-	if (!m_Tex_None->loadFromFile("res/none.png"))
-	{
-		std::cout << "Could not find m_Tex_None image!\n";
-	}
-
-	if (!m_Tex_X->loadFromFile("res/x.png"))
+	if (!m_Textures[0]->loadFromFile("res/x.png"))
 	{
 		std::cout << "Could not find m_Tex_X image!\n";
 	}
 
-	if (!m_Tex_O->loadFromFile("res/o.png"))
+	m_Textures.emplace_back(std::make_unique<sf::Texture>());
+
+	if (!m_Textures[1]->loadFromFile("res/o.png"))
 	{
 		std::cout << "Could not find m_Tex_O image!\n";
+	}
+
+	m_Textures.emplace_back(std::make_unique<sf::Texture>());
+
+	if (!m_Textures[2]->loadFromFile("res/none.png"))
+	{
+		std::cout << "Could not find m_Tex_None image!\n";
 	}
 }
 
 Tile::~Tile()
 {
-	m_Tex_None.reset();
-	m_Tex_X.reset();
-	m_Tex_O.reset();
+	for (auto& texture : m_Textures)
+	{
+		texture.reset();
+		texture = nullptr;
+	}
+	m_Textures.clear();
 }
 
 void Tile::render(sf::RenderWindow & renderWindow, sf::Sprite& sprite)
 {
-	switch (m_State)
-	{
-	case State::None:
-		sprite.setTexture(*m_Tex_None);
-		break;
-	case State::X:
-		sprite.setTexture(*m_Tex_X);
-		break;
-	case State::O:
-		sprite.setTexture(*m_Tex_O);
-		break;
-	}
 	sprite.setPosition(m_Pos);
+
+	sprite.setTexture(*m_Textures[static_cast<int>(m_State)]);
+
 	renderWindow.draw(sprite);
 }

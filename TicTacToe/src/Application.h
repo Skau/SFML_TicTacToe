@@ -4,7 +4,6 @@
 #include <vector>
 
 namespace sf { class RenderWindow; }
-
 class Map;
 
 class Application
@@ -16,7 +15,6 @@ public:
 	void init();
 
 private:
-	void beginPlay();
 	void mainLoop();
 	void handleEvents();
 	void render() const;
@@ -25,7 +23,7 @@ private:
 	std::unique_ptr<Map> m_Map;
 	
 	bool m_PlayerTurn;
+	bool m_IsRunning;
 	bool m_IsFinished;
 	int m_SpotsTaken;
 };
-

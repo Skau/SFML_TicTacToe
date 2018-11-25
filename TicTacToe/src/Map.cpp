@@ -1,47 +1,53 @@
 #include "Map.h"
-#include "SFML/Graphics.hpp"
+
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Texture.hpp>
+
 #include "Globals.h"
 #include "Tile.h"
 
-#include <iostream>
-
-Map::Map()
+Map::Map(int rows, int columns) 
+	: m_Rows{rows}, m_Columns{columns}
 {
-
 	m_Sprite = std::make_unique<sf::Sprite>();
 
-	m_Grid.resize(3, std::vector<std::shared_ptr<Tile>>(3));
+	m_Grid.resize(m_Rows, std::vector<std::shared_ptr<Tile>>(m_Columns));
 
-	for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < m_Rows; ++i)
 	{
-		for (int j = 0; j < 3; ++j)
+		for (int j = 0; j < m_Columns; ++j)
 		{
-			m_Grid[i][j] = std::make_shared<Tile>(sf::Vector2f((float)i * OFFSET, (float)j * OFFSET));
+			m_Grid[i][j] = std::make_shared<Tile>(sf::Vector2f((float)i * OFFSET , (float)j * OFFSET));
 		}
 	}
 }
 
 Map::~Map()
 {
-	for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < m_Rows; ++i)
 	{
-		for (int j = 0; j < 3; ++j)
+		for (int j = 0; j < m_Columns; ++j)
 		{
 			m_Grid[i][j].reset();
+			m_Grid[i][j] = nullptr;
 		}
 	}
-
 	m_Grid.clear();
+
+	m_Sprite.reset();
+	m_Sprite = nullptr;
 }
 
 bool Map::setPiece(sf::Vector2i mousePos, bool playerTurn)
 {
-	auto newState = static_cast<State>(playerTurn);
-	auto oldState = m_Grid[mousePos.x / OFFSET][mousePos.y / OFFSET]->getState();
+	auto tile = m_Grid[mousePos.x / OFFSET][mousePos.y / OFFSET];
+	if (!tile) { return false; }
 
-	if (oldState == State::None)
+	if (tile->isNone())
 	{
-		m_Grid[mousePos.x / OFFSET][mousePos.y / OFFSET]->setState(newState);
+		tile->setState(static_cast<State>(playerTurn));
+		m_SpotsTaken++;
 		return true;
 	}
 	return false;
@@ -49,16 +55,11 @@ bool Map::setPiece(sf::Vector2i mousePos, bool playerTurn)
 
 void Map::render(sf::RenderWindow& renderWindow) const
 {
-	for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < m_Rows; ++i)
 	{
-		for (int j = 0; j < 3; ++j)
+		for (int j = 0; j < m_Columns; ++j)
 		{
 			m_Grid[i][j]->render(renderWindow, *m_Sprite);
 		}
 	}
-}
-
-bool Map::checkWin()
-{
-	return false;
 }

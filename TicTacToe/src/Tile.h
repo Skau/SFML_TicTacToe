@@ -1,7 +1,9 @@
 #pragma once
 
 #include <memory>
-#include "SFML/System.hpp"
+#include <vector>
+
+#include <SFML/System/Vector2.hpp>
 
 namespace sf 
 { 
@@ -25,20 +27,17 @@ public:
 
 	void render(sf::RenderWindow& renderWindow, sf::Sprite& sprite);
 
-	sf::Vector2f getPosition() { return m_Pos; }
+	inline sf::Vector2f getPosition() const { return m_Pos; }
 
-	State getState() const { return m_State; }
-	void setState(State newState) { m_State = newState; }
+	inline State getState() const { return m_State; }
+	inline void setState(State newState) { m_State = newState; }
 
-	bool isNone() const { return m_IsNone; }
+	inline bool isNone() const { return m_State == State::None; }
 
 private:
 	State m_State;
 
 	sf::Vector2f m_Pos;
-	bool m_IsNone;
-	std::unique_ptr<sf::Texture> m_Tex_None;
-	std::unique_ptr<sf::Texture> m_Tex_X;
-	std::unique_ptr<sf::Texture> m_Tex_O;
-};
 
+	std::vector<std::unique_ptr<sf::Texture>> m_Textures;
+};

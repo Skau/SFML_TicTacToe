@@ -2,7 +2,8 @@
 
 #include <vector>
 #include <memory>
-#include "SFML/System.hpp"
+
+#include <SFML/System/Vector2.hpp>
 
 namespace sf 
 { 
@@ -10,21 +11,25 @@ namespace sf
 	class Sprite;
 	class Texture;
 }
-
 class Tile;
 
 class Map
 {
 public:
-	Map();
+	Map(int rows, int columns);
 	~Map();
 
 	bool setPiece(sf::Vector2i mousePos, bool playerTurn);
 
 	void render(sf::RenderWindow& renderWindow) const;
 
-	bool checkWin();
+	bool isBoardFull() { return m_SpotsTaken >= m_Rows * m_Columns; }
+
 private:
+	int m_Rows, m_Columns;
+
+	int m_SpotsTaken;
+
 	std::unique_ptr<sf::Sprite> m_Sprite;
 	std::vector<std::vector<std::shared_ptr<Tile>>> m_Grid;
 };
