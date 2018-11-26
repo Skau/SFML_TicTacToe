@@ -6,8 +6,6 @@
 #include "Globals.h"
 #include "Map.h"
 
-#include <iostream>
-
 Application::Application() : m_IsRunning{true}
 {
 	m_Window = std::make_unique<sf::RenderWindow>(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32), "TicTacToe", sf::Style::Titlebar | sf::Style::Close);

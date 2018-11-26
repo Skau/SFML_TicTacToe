@@ -27,12 +27,12 @@ public:
 
 	void render(sf::RenderWindow& renderWindow, sf::Sprite& sprite);
 
-	inline sf::Vector2f getPosition() const { return m_Pos; }
+	sf::Vector2f getPosition() const { return m_Pos; }
 
-	inline State getState() const { return m_State; }
-	inline void setState(State newState) { m_State = newState; }
+	State getState() const { return m_State; }
+	void setState(State newState) { m_State = newState; }
 
-	inline bool isNone() const { return m_State == State::None; }
+	bool isNone() const { return m_State == State::None; }
 
 private:
 	State m_State;

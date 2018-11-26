@@ -18,7 +18,7 @@ Map::Map(int rows, int columns)
 	{
 		for (int j = 0; j < m_Columns; ++j)
 		{
-			m_Grid[i][j] = std::make_shared<Tile>(sf::Vector2f((float)i * OFFSET , (float)j * OFFSET));
+			m_Grid[i][j] = std::make_shared<Tile>(sf::Vector2f((float)i * OFFSET, (float)j * OFFSET));
 		}
 	}
 }
